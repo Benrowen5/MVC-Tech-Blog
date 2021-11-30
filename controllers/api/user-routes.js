@@ -2,12 +2,25 @@ const router = require('express').Router();
 const sequelize = require('../../config/connection');
 const {User} = require('../../models');
 
-// GET users
+// GET all users
 router.get('/', (req, res) => {
     User.findAll({
-        attributes: ['username', 'email'],
+        attributes: ['id', 'username', 'email'],
     })
     .then(userData => res.json(userData))
+    .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+});
+// GET single user
+router.get('/:id', (req, res) => {
+    User.findOne({
+        where: {
+            id: req.params.id
+        }
+    })
+    .then(dbUserData => res.json(dbUserData))
     .catch(err => {
         console.log(err);
         res.status(500).json(err);
@@ -36,6 +49,42 @@ router.post('/', (req, res) =>{
         res.status(500).json(err);
     });
 });
-
+// update single user
+router.put('/:id', (req, res) => {
+    User.update(req.body, {
+        individualHooks: true,
+        where: {
+            id: req.params.id
+        }
+    })
+    .then(dbUserData => {
+        if(!dbUserData[0]) {
+            res.status(404).json({ message: 'There is no user associated with the provided ID.'});
+        }
+        res.json(dbUserData);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+});
+// delete user
+router.delete('/:id', (req, res) => {
+    User.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
+    .then(dbUserData => {
+        if (!dbUserData) {
+            res.status(404).json({ message: 'There is no user associated with the provided ID.'});
+        }
+        res.json(dbUserData);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+});
 
 module.exports = router;
