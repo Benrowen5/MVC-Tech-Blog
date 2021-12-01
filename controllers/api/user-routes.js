@@ -1,18 +1,18 @@
 const router = require('express').Router();
-const sequelize = require('../../config/connection');
-const {User} = require('../../models');
+const { User, Post} = require('../../models');
 
 // GET all users
 router.get('/', (req, res) => {
     User.findAll({
-        attributes: ['id', 'username', 'email'],
+        attributes: {exclude: ['password']},
     })
-    .then(userData => res.json(userData))
+    .then(dbUserData => res.json(dbUserData))
     .catch(err => {
         console.log(err);
         res.status(500).json(err);
     });
 });
+
 // GET single user
 router.get('/:id', (req, res) => {
     User.findOne({
@@ -49,6 +49,54 @@ router.post('/', (req, res) =>{
         res.status(500).json(err);
     });
 });
+
+// POST user login
+router.post('/login', (req, res) => {
+    User.findOne({
+        where: {
+            email: req.body.email
+        }
+    })
+    .then(dbUserData => {
+        if(!dbUserData) {
+            res.status(400).json({ message: 'No user found with that email address.' });
+            return;
+        }
+
+        // verify credentials
+        const validPassword = dbUserData.checkPassword(req.body.password);
+
+        if(!validPassword) {
+            res.status(400).json({ message: 'Invalid password.'});
+            return;
+        }
+        req.session.save(() => {
+            // declare session variables.
+            req.session.user_id = dbUserData.id;
+            req.session.username = dbUserData.username;
+            req.session.loggedIn = true;
+            // req.session.cookie.maxAge = 60 * 60 * 1000;
+
+            res.json({user: dbUserData, message: 'You are now logged in!'});
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+});
+
+// POST user logout
+router.post('/logout', (req, res) => {
+    if(req.session.loggedIn) {
+        req.session.destroy(() => {
+            res.status(204).end();
+        });
+    } else {
+        res.status(404).end();
+    }
+});
+
 // update single user
 router.put('/:id', (req, res) => {
     User.update(req.body, {

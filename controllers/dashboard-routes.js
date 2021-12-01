@@ -4,7 +4,7 @@ const { User } = require('../models');
 
 
 router.get('/', withAuth, (req, res) => {
-    console.log(req,session);
+    console.log(req.session);
     res.render('dashboard', {
 
     })

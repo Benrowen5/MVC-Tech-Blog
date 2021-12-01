@@ -59,9 +59,7 @@ router.get('/login', (req,res) => {
         res.redirect('/');
         return;
     }
-    res.render('login',{
-
-    })
+    res.render('login');
     // .catch(err => {
     //     res.status(500).json(err);
     // });

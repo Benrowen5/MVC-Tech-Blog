@@ -1,3 +1,4 @@
+{{#if posts.length}}
 <ol class="post-list">
     {{#each posts as |post|}}
     <li>
@@ -5,3 +6,7 @@
     </li>
     {{/each}}
 </ol>
+
+{{else}}
+No posts yet!
+{{/if}}
