@@ -3,10 +3,10 @@
   ![License](https://img.shields.io/badge/license-MIT-blue)
   
   ## Description
-  This project was to develop a full-stack content management system-style application. In this project, the application is a blog design for posts related to tech - old and new. This application was created using Express.js, Sequelize, node.js, MySQL, and was deployed using Heroku. Ths application allows users to view, create, and like posts that can be made by any user that has valid credentials to log in with. 
+  This project was to develop a full-stack content management system-style application. In this project, the application is a blog designed for posts related to tech - old and new. This application was created using Express.js, Sequelize, node.js, MySQL, and was deployed using Heroku. Ths application allows users to view, create, and like posts that can be made by any user that has valid credentials to log in with. 
 
-  * screenshot
-  
+   ![MVC SS](https://user-images.githubusercontent.com/79202800/144159106-d0866237-780f-4a17-8584-503b2ef47a3f.PNG)
+
   ***************************************************************
   ## Table of Contents
 * [Installation](#installation)
