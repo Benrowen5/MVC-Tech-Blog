@@ -5,7 +5,7 @@ const { User, Post, Comment } = require('../models');
 // GET route for all posts to be displayed on homepage
 router.get('/', (req, res) => {
     Post.findAll({
-        attributes: ['id', 'post_url', 'title', 'created_at'],
+        attributes: ['id', 'title', 'content', 'created_at'],
         include: {
             model: User,
             attributes: ['username']
@@ -15,7 +15,8 @@ router.get('/', (req, res) => {
         const posts = dbPostData.map(post => post.get({plain: true}));
         res.render('homepage', {
             posts,
-            loggedIn: req.session.loggedIn
+            loggedIn: req.session.loggedIn,
+            username: req.session.username
         });
     })
     .catch(err => {
@@ -26,11 +27,11 @@ router.get('/', (req, res) => {
 
 // get route for individual post pages
 router.get('/post/:id', (req, res) => {
-    Post.findAll({
+    Post.findOne({
         where: {
             id: req.params.id
         },
-        attributes: ['id', 'post_url', 'title', 'created_at'],
+        attributes: ['id', 'title', 'content', 'created_at'],
         include: {
             model: User,
             attributes: ['username']
@@ -41,10 +42,11 @@ router.get('/post/:id', (req, res) => {
             res.status(404).json({ message: 'There is no post associated with the id provided.'});
             return;
         }
-        const post = dbPostData.map({plain: true});
+        const post = dbPostData.get({plain: true});
         res.render('single-post', {
             post,
-            loggedIn: req.session.loggedIn
+            loggedIn: req.session.loggedIn,
+            username: req.session.username
         });
     })
     .catch(err => {
@@ -55,14 +57,25 @@ router.get('/post/:id', (req, res) => {
 
 // get route for login page
 router.get('/login', (req,res) => {
-    if (req.session.loggedIn) {
+    if (req.session.userId) {
         res.redirect('/');
         return;
+    } else {
+        res.render('login', {
+            loggedIn: req.session.loggedIn
+        });
     }
-    res.render('login');
-    // .catch(err => {
-    //     res.status(500).json(err);
-    // });
+});
+
+router.get('/signup', (req, res) => {
+    if (req.session.loggedIn) {
+        res.redirect('/dashboard');
+        return;
+    } else {
+        res.render('signup', {
+            loggedIn: req.session.loggedIn
+        })
+    }
 });
 
 
