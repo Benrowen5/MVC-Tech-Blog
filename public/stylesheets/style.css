@@ -8,7 +8,6 @@
     margin: 0;
     font-family: sans-serif;
     color: #333;
-    text-align: center;
   }
   
   a {
@@ -74,7 +73,8 @@
     display: flex;
     flex-direction: column;
   }
-  
+
+  /* HEADER STYLES */
   header {
     border-bottom: 1px solid #ccc;
     display: flex;
@@ -84,8 +84,13 @@
   }
   
   header h1 {
+    font-size: 2em;
+  }
+
+  header h2 {
     font-size: 1em;
   }
+
   
   main {
     flex: 1;
@@ -119,6 +124,7 @@
   }
   
   .post {
+    justify-content: left;
     margin-bottom: 2%;
     line-height: 150%;
   }

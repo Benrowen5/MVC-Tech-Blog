@@ -77,6 +77,7 @@ router.post('/login', (req, res) => {
             req.session.loggedIn = true;
             // req.session.cookie.maxAge = 60 * 60 * 1000;
 
+            console.log('logged in');
             res.json({user: dbUserData, message: 'You are now logged in!'});
         });
     })
